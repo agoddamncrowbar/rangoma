@@ -157,9 +157,8 @@ export const sectors = [
   'Entrepreneurs',
 ]
 
-// Placeholder articles: these will be published from WordPress.
-export const insights = [
-  { slug: 'sample-1', tag: 'Property', title: '[Sample] What to check before you buy land in Nairobi', date: 'Sample' },
-  { slug: 'sample-2', tag: 'Employment', title: '[Sample] Termination and your rights at work', date: 'Sample' },
-  { slug: 'sample-3', tag: 'Succession', title: '[Sample] Applying for a grant of representation', date: 'Sample' },
-]
+
+export const maps = {
+  link: 'https://www.google.com/maps/search/?api=1&query=Kenyatta+University+Plaza+Haile+Selassie+Avenue+Nairobi',
+  embed: 'https://www.google.com/maps?q=Kenyatta+University+Plaza,+Haile+Selassie+Avenue,+Nairobi&output=embed',
+}

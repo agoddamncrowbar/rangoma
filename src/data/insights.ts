@@ -1,14 +1,13 @@
-import { getInsights } from '../lib/wp'
-import thumbProperty from './thumbs/property.webp'
-import thumbEmployment from './thumbs/employment.webp'
-import thumbSuccession from './thumbs/succession.webp'
-import thumbLitigation from './thumbs/litigation.webp'
-import thumbBanking from './thumbs/banking.webp'
-import thumbCriminal from './thumbs/criminal.webp'
+import thumbProperty from '../assets/thumbs/property.webp'
+import thumbEmployment from '../assets/thumbs/employment.webp'
+import thumbSuccession from '../assets/thumbs/succession.webp'
+import thumbLitigation from '../assets/thumbs/litigation.webp'
+import thumbBanking from '../assets/thumbs/banking.webp'
+import thumbCriminal from '../assets/thumbs/criminal.webp'
 
-// Placeholder articles for the /alt design. Thumbnails are crops of the hero scene, to be swapped for real photos. Replace with real posts from WordPress;
+// Placeholder articles; when VITE_WP_URL is set, lib/wp.ts serves live posts instead. Thumbnails are crops of the hero scene, to be swapped for real photos. Replace with real posts from WordPress;
 // when VITE_WP_URL is set, loadPosts() returns the live posts instead.
-export interface AltPost {
+export interface Post {
   slug: string
   tag: string
   title: string
@@ -21,7 +20,7 @@ export interface AltPost {
   body?: { h?: string; p: string[] }[]
 }
 
-export const altInsights: AltPost[] = [
+export const insights: Post[] = [
   {
     slug: 'before-you-buy-land',
     thumb: thumbProperty,
@@ -134,14 +133,4 @@ export const altInsights: AltPost[] = [
   },
 ]
 
-export async function loadPosts(): Promise<AltPost[]> {
-  return import.meta.env.VITE_WP_URL ? getInsights() : altInsights
-}
-
-export const getPost = (posts: AltPost[], slug: string) => posts.find((p) => p.slug === slug)
-
-export const folio = (i: number) => String(i + 1).padStart(2, '0')
-
-export const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=Kenyatta+University+Plaza+Haile+Selassie+Avenue+Nairobi'
-
-export const mapEmbed = 'https://www.google.com/maps?q=Kenyatta+University+Plaza,+Haile+Selassie+Avenue,+Nairobi&output=embed'
+export const getPost = (posts: Post[], slug: string) => posts.find((p) => p.slug === slug)

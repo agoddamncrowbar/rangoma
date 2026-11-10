@@ -1,4 +1,5 @@
-import { practiceAreas, insights, type PracticeArea } from '../data/content'
+import { practiceAreas, type PracticeArea } from '../data/content'
+import { insights, type Post } from '../data/insights'
 
 // Headless WordPress hook-up point. Set VITE_WP_URL (e.g. https://cms.example.com)
 // and the functions below fetch from the WP REST API; without it they fall back
@@ -23,8 +24,8 @@ export async function getPracticeAreas(): Promise<PracticeArea[]> {
   }))
 }
 
-export async function getInsights() {
+export async function getInsights(): Promise<Post[]> {
   if (!WP) return insights
-  const posts = await wp<{ slug: string; title: { rendered: string }; date: string }[]>('posts?per_page=3')
+  const posts = await wp<{ slug: string; title: { rendered: string }; date: string }[]>('posts?per_page=12')
   return posts.map((p) => ({ slug: p.slug, tag: 'Insight', title: p.title.rendered, date: p.date.slice(0, 10) }))
 }
