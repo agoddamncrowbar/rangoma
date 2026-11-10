@@ -8,14 +8,12 @@ npm run dev      # http://localhost:5173
 npm run build
 ```
 
-Pages (hash routes): `#/` Home, `#/about`, `#/practice`, `#/practice/<slug>`, `#/insights`, `#/contact`.
+Pages (hash routes): `#/` Home, `#/about`, `#/practice`, `#/practice/<slug>`, `#/insights`, `#/insights/<slug>`, `#/contact`, and the admin portal at `/admin` (sign in, insights, enquiries, account, forgot password).
 
-## Headless WordPress
-All copy lives in `src/data/content.ts`. `src/lib/wp.ts` is the only place content is fetched:
-set `VITE_WP_URL=https://your-wp-site` and practice areas and insights load from the WP REST API
-(`/wp-json/wp/v2/practice-areas`, `/posts`); otherwise the local content is used.
+## Backend
+The site talks to a PHP + MySQL API in `../rangoma_backend` (Insights articles, contact form with email, admin portal at `/admin`). Run it with `npm run api` in a second terminal; Vite proxies `/api` and `/uploads` to it. Setup, `.env` settings and deployment are in `../rangoma_backend/README.md`. Practice areas and firm copy live in `src/data/content.ts`.
 
 ## Placeholders to replace
-Founder portrait, map, insight articles (marked `[Sample]`), and the demo contact form (does not send).
+Founder portrait (monogram card) and the starter insight articles, which you can edit or delete in the admin portal.
 
 Logo variants (`src/assets/logo-*.png`) were extracted from `logo.jpeg` onto transparent backgrounds.

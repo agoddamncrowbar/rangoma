@@ -1,19 +1,48 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { firm, maps, practiceAreas } from '../data/content'
+import { ApiError, sendEnquiry } from '../lib/api'
 import { Button } from '../components/ui/Button'
+import { Input, Select, Textarea } from '../components/ui/Field'
 import { Heading } from '../components/ui/Heading'
+import { Notice } from '../components/ui/Notice'
 import { TextLink } from '../components/ui/TextLink'
 import { Container } from '../components/layout/Container'
 import { PageHero } from '../components/layout/PageHero'
 import { Section } from '../components/layout/Section'
 import { Reveal } from '../components/global/Reveal'
 
-const field =
-  'min-h-11 rounded-xs border border-ink/20 bg-card px-3 py-2.5 text-base leading-6 font-normal text-ink transition-colors duration-150 ease-soft hover:border-ink/40 focus:border-burg focus:outline-2 focus:outline-burg focus:outline-offset-0'
-const label = 'grid gap-2 text-sm leading-5 font-medium text-ink'
+const empty = { name: '', email: '', phone: '', area: '', message: '', website: '' }
 
 export default function Contact() {
-  const [sent, setSent] = useState(false)
+  const [form, setForm] = useState(empty)
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [formError, setFormError] = useState('')
+  const [sending, setSending] = useState(false)
+  const [done, setDone] = useState<{ emailed: boolean; email: string } | null>(null)
+
+  const set = (key: keyof typeof empty) => (e: { target: { value: string } }) => setForm((f) => ({ ...f, [key]: e.target.value }))
+
+  async function submit(e: FormEvent) {
+    e.preventDefault()
+    setSending(true)
+    setErrors({})
+    setFormError('')
+    try {
+      const res = await sendEnquiry(form)
+      setDone({ emailed: res.emailed, email: form.email })
+      setForm(empty)
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setErrors(err.fields)
+        setFormError(Object.keys(err.fields).length ? '' : err.message)
+      } else {
+        setFormError('Something went wrong. Please try again.')
+      }
+    } finally {
+      setSending(false)
+    }
+  }
+
   return (
     <>
       <PageHero eyebrow="Contact" title="Let's talk about your matter">
@@ -58,53 +87,45 @@ export default function Contact() {
             </p>
           </Reveal>
           <Reveal>
-            {sent ? (
+            {done ? (
               <div className="rounded-lg bg-raise p-8">
                 <Heading as="h3" size="md" className="mb-2">
                   Thank you
                 </Heading>
-                <p className="m-0 text-ink-2">This is a demo form, so nothing was sent. In production, enquiries will be emailed to the firm.</p>
+                <p className="mb-5 text-ink-2">
+                  {done.emailed
+                    ? `We have received your enquiry and sent a confirmation to ${done.email}. An advocate will get back to you soon.`
+                    : 'We have received your enquiry. An advocate will get back to you soon.'}
+                </p>
+                <button type="button" onClick={() => setDone(null)} className="cursor-pointer font-medium text-burg underline decoration-burg/35 decoration-1 underline-offset-4 hover:decoration-burg">
+                  Send another message
+                </button>
               </div>
             ) : (
-              <form
-                className="grid gap-5"
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  setSent(true)
-                }}
-              >
-                <label className={label}>
-                  Full name
-                  <input required name="name" autoComplete="name" className={field} />
-                </label>
+              <form className="grid gap-5" onSubmit={submit} noValidate>
+                {formError && <Notice tone="error">{formError}</Notice>}
+                <Input label="Full name" name="name" autoComplete="name" required value={form.name} onChange={set('name')} error={errors.name} />
                 <div className="grid gap-5 sm:grid-cols-2">
-                  <label className={label}>
-                    Email
-                    <input required type="email" name="email" autoComplete="email" className={field} />
-                  </label>
-                  <label className={label}>
-                    Phone
-                    <input type="tel" name="phone" autoComplete="tel" className={field} />
+                  <Input label="Email" name="email" type="email" autoComplete="email" required value={form.email} onChange={set('email')} error={errors.email} />
+                  <Input label="Phone (optional)" name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={set('phone')} error={errors.phone} />
+                </div>
+                <Select label="Area of law (optional)" name="area" value={form.area} onChange={set('area')} error={errors.area}>
+                  <option value="">Select an area</option>
+                  {practiceAreas.map((a) => (
+                    <option key={a.slug}>{a.title}</option>
+                  ))}
+                  <option>Other</option>
+                </Select>
+                <Textarea label="How can we help?" name="message" rows={5} required value={form.message} onChange={set('message')} error={errors.message} />
+                {/* Honeypot: hidden from people, filled in by bots. */}
+                <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                  <label>
+                    Website
+                    <input tabIndex={-1} autoComplete="off" name="website" value={form.website} onChange={set('website')} />
                   </label>
                 </div>
-                <label className={label}>
-                  Area of law
-                  <select name="area" defaultValue="" className={field}>
-                    <option value="" disabled>
-                      Select an area
-                    </option>
-                    {practiceAreas.map((a) => (
-                      <option key={a.slug}>{a.title}</option>
-                    ))}
-                    <option>Other</option>
-                  </select>
-                </label>
-                <label className={label}>
-                  How can we help?
-                  <textarea required rows={5} name="msg" className={field} />
-                </label>
                 <Button type="submit" variant="burg" className="justify-self-start">
-                  Send enquiry
+                  {sending ? 'Sending' : 'Send enquiry'}
                 </Button>
               </form>
             )}

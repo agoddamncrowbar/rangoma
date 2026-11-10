@@ -1,6 +1,4 @@
 import { practiceAreas } from '../data/content'
-import { getPracticeAreas } from '../lib/wp'
-import { useAsync } from '../lib/hooks'
 import { Container } from '../components/layout/Container'
 import { PageHero } from '../components/layout/PageHero'
 import { Section } from '../components/layout/Section'
@@ -8,7 +6,7 @@ import { Cta } from '../components/global/Cta'
 import { PracticeList } from '../components/global/PracticeList'
 
 export default function Practice() {
-  const areas = useAsync(getPracticeAreas, practiceAreas)
+  const areas = practiceAreas
   return (
     <>
       <PageHero eyebrow="Practice areas" title="Litigation-led, with depth across property, finance and succession">

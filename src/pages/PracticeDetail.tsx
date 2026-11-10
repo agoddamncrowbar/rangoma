@@ -1,6 +1,4 @@
 import { practiceAreas } from '../data/content'
-import { getPracticeAreas } from '../lib/wp'
-import { useAsync } from '../lib/hooks'
 import { Button } from '../components/ui/Button'
 import { Folio } from '../components/ui/Folio'
 import { Heading } from '../components/ui/Heading'
@@ -12,7 +10,7 @@ import { Section } from '../components/layout/Section'
 import { Reveal } from '../components/global/Reveal'
 
 export default function PracticeDetail({ slug }: { slug: string }) {
-  const areas = useAsync(getPracticeAreas, practiceAreas)
+  const areas = practiceAreas
   const a = areas.find((x) => x.slug === slug)
   if (!a)
     return (

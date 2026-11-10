@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { Post } from '../../data/insights'
+import type { Post } from '../../lib/api'
 import { Heading } from '../ui/Heading'
 import { Reveal } from './Reveal'
 
@@ -29,7 +29,7 @@ function Thumb({ post }: { post: Post }) {
 
 function Card({ post, children }: { post: Post; children: ReactNode }) {
   // Only posts with a body have an article page to link to.
-  return post.body ? (
+  return post.hasBody ? (
     <a href={`#/insights/${post.slug}`} className="group block">
       {children}
     </a>

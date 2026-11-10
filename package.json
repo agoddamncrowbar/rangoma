@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api": "cd ../rangoma_backend && php -S 127.0.0.1:8000 -t public"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.5",

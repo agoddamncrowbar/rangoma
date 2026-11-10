@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 export function useRoute() {
   const read = () => window.location.hash.replace(/^#/, '') || '/'
@@ -14,12 +14,23 @@ export function useRoute() {
   return route
 }
 
-export function useAsync<T>(fn: () => Promise<T>, initial: T) {
-  const [data, setData] = useState<T>(initial)
+// Runs an async loader on mount and whenever `deps` change. `reload()` runs it again.
+export function useFetch<T>(load: () => Promise<T>, deps: unknown[] = []) {
+  const [state, setState] = useState<{ data: T | null; error: Error | null; loading: boolean }>({ data: null, error: null, loading: true })
+  const [tick, setTick] = useState(0)
   useEffect(() => {
-    fn().then(setData).catch(() => {})
-  }, [])
-  return data
+    let live = true
+    setState((s) => ({ ...s, loading: true }))
+    load()
+      .then((data) => live && setState({ data, error: null, loading: false }))
+      .catch((error: Error) => live && setState({ data: null, error, loading: false }))
+    return () => {
+      live = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...deps, tick])
+  const reload = useCallback(() => setTick((t) => t + 1), [])
+  return { ...state, reload }
 }
 
 export function useScrolled(px = 24) {

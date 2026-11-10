@@ -1,7 +1,6 @@
 import { firm, founder, practiceAreas, sectors } from '../data/content'
-import { getInsights, getPracticeAreas } from '../lib/wp'
-import { insights } from '../data/insights'
-import { useAsync } from '../lib/hooks'
+import { getPosts } from '../lib/api'
+import { useFetch } from '../lib/hooks'
 import { Button } from '../components/ui/Button'
 import { Eyebrow } from '../components/ui/Eyebrow'
 import { Folio } from '../components/ui/Folio'
@@ -19,8 +18,8 @@ import { SectionHead } from '../components/global/SectionHead'
 import heroScene from '../assets/hero-scene.webp'
 
 export default function Home() {
-  const areas = useAsync(getPracticeAreas, practiceAreas)
-  const posts = useAsync(getInsights, insights)
+  const areas = practiceAreas
+  const { data: posts } = useFetch(getPosts)
   return (
     <>
       <section data-dark className="relative flex min-h-svh flex-col justify-between overflow-hidden bg-night pt-20 text-on">
@@ -156,12 +155,14 @@ export default function Home() {
         </Container>
       </Section>
 
-      <Section>
-        <Container>
-          <SectionHead eyebrow="Insights" title="Legal updates and guidance" aside={<TextLink href="#/insights">All insights</TextLink>} />
-          <PostGrid posts={posts.slice(0, 3)} />
-        </Container>
-      </Section>
+      {posts && posts.length > 0 && (
+        <Section>
+          <Container>
+            <SectionHead eyebrow="Insights" title="Legal updates and guidance" aside={<TextLink href="#/insights">All insights</TextLink>} />
+            <PostGrid posts={posts.slice(0, 3)} />
+          </Container>
+        </Section>
+      )}
 
       <Cta />
     </>
