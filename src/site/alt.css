@@ -1,4 +1,8 @@
-/* /alt design. Everything is scoped to .alt (plus the .vswitch toggle) so the original styles stay untouched. */
+/* Site styles. Component rules are scoped to .alt; the base resets below cover the page itself. */
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #f7f4ee; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; }
+
 
 .alt {
   --a-bg: #f7f4ee;
@@ -96,8 +100,14 @@
 .a-hero h1 { max-width: 18ch; }
 .a-cta-row { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 40px; }
 .a-strip { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 32px; padding-block: 20px; border-top: 1px solid var(--a-on-line); font-size: 13px; line-height: 20px; color: var(--a-on2); }
-.a-phero { padding: 160px 0 80px; }
-.a-phero h1 { max-width: 20ch; font-size: clamp(36px, 4.6vw, 56px); }
+/* Inner-page hero keeps the original design: burgundy wash, fluted-column motif, tracked gold label, heavier serif title. */
+.a-phero { position: relative; overflow: hidden; padding: 168px 0 96px; background: radial-gradient(120% 90% at 80% 0%, #7a1024 0%, #5f0614 45%, #43030d 100%); }
+.a-phero .a-wrap { position: relative; z-index: 1; }
+.a-phero .a-eyebrow { margin-bottom: 20px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--a-gold); }
+.a-phero h1 { max-width: 16ch; font-size: clamp(2.6rem, 6vw, 4.8rem); font-weight: 600; line-height: 1.05; letter-spacing: -0.02em; }
+.a-phero .a-lede { font-size: clamp(1.05rem, 1.6vw, 1.3rem); line-height: 1.6; max-width: 40rem; margin-top: 24px; color: rgba(246, 240, 228, 0.85); }
+.a-cols { position: absolute; right: -2%; top: 0; bottom: 0; width: 46%; display: flex; gap: 2.2%; justify-content: flex-end; opacity: 0.1; pointer-events: none; }
+.a-cols i { width: 9%; background: linear-gradient(90deg, transparent, var(--a-gold) 30%, var(--a-gold) 70%, transparent); }
 
 /* sections */
 .a-sec { padding: clamp(64px, 8vw, 96px) 0; }
@@ -243,13 +253,8 @@
   .a-brand { font-size: 18px; }
   .a-brand img { height: 36px; }
   .a-phero { padding: 128px 0 56px; }
+  .a-cols { width: 70%; }
   .a-lede { font-size: 18px; line-height: 28px; }
   .a-row { grid-template-columns: 32px 1fr 16px; gap: 16px; }
   .a-cta { padding: 64px 0; }
 }
-
-/* version toggle, shown on both designs */
-.vswitch { position: fixed; right: 16px; bottom: 16px; z-index: 100; display: flex; gap: 4px; padding: 4px; background: #1f1b16; border-radius: 8px; font: 500 13px/1 'Inter', system-ui, sans-serif; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18); }
-.vswitch a { padding: 8px 12px; border-radius: 4px; color: rgba(243, 236, 224, 0.7); text-decoration: none; transition: color 160ms, background-color 160ms; }
-.vswitch a:hover { color: #f3ece0; }
-.vswitch a.on { background: rgba(243, 236, 224, 0.16); color: #f3ece0; }

@@ -1,4 +1,4 @@
-import { useState, type MouseEvent, type ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { firm } from '../data/content'
 import { useScrolled } from '../lib/hooks'
 import logoLight from './logo-light-clean.png'
@@ -99,6 +99,11 @@ export function Footer() {
 export function PageHero({ eyebrow, title, children }: { eyebrow: string; title: string; children?: ReactNode }) {
   return (
     <section className="a-phero a-dark">
+      <div className="a-cols" aria-hidden="true">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <i key={i} />
+        ))}
+      </div>
       <div className="a-wrap">
         <p className="a-eyebrow" data-a>{eyebrow}</p>
         <h1 data-a style={d(60)}>{title}</h1>
@@ -116,19 +121,5 @@ export function Cta() {
         <a href="#/contact" className="a-btn a-btn-burg">Speak to an advocate</a>
       </div>
     </section>
-  )
-}
-
-// Fixed toggle so the original and /alt designs can be compared on the same page.
-export function Switcher({ alt }: { alt: boolean }) {
-  const go = (to: string) => (e: MouseEvent) => {
-    e.preventDefault()
-    window.location.assign(to + window.location.hash)
-  }
-  return (
-    <div className="vswitch" role="group" aria-label="Design version">
-      <a href="/" className={alt ? '' : 'on'} onClick={go('/')}>Original</a>
-      <a href="/alt" className={alt ? 'on' : ''} onClick={go('/alt')}>Alt</a>
-    </div>
   )
 }
